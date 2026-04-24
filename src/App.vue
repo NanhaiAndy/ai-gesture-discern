@@ -157,15 +157,18 @@ let debugTimer: number;
 
 // Sync stream to preview video once template refs are resolved and stream is active
 watch([previewVideoRef, streamMedia], ([previewVideo, stream]) => {
-  if (previewVideo && stream) {
+  if (previewVideo && stream && previewVideo.srcObject !== stream) {
     previewVideo.srcObject = stream;
   }
 });
 
 watch([videoRef, streamMedia], ([video, stream]) => {
-  if (video && stream) {
+  if (video && stream && video.srcObject !== stream) {
     video.srcObject = stream;
-    video.play().catch(e => console.error(e));
+    video.play().catch(e => {
+      // Ignore abort errors
+      if (e.name !== 'AbortError') console.error(e);
+    });
   }
 });
 
@@ -182,10 +185,6 @@ onMounted(async () => {
       audio: false,
     });
     streamMedia.value = stream;
-    if (videoRef.value) {
-      videoRef.value.srcObject = stream;
-      videoRef.value.play().catch(e => console.error(e));
-    }
   } catch (err) {
     console.error("Camera access denied or error:", err);
     permissionError.value = true;
