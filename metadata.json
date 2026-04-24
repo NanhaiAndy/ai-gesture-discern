@@ -1,0 +1,6 @@
+{
+  "name": "Hand Gesture Animation",
+  "description": "Interactive hand gesture detection demo with webcam, driving a hand animation, open/close scaling, and direction recognition.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": []
+}
